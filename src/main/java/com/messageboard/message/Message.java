@@ -1,8 +1,12 @@
 package com.messageboard.message;
 
-public class Message {
+import java.io.Serializable;
+
+public class Message implements Serializable{
     private String author;
     private String message;
+
+    public Message() {}
 
     public Message(String author, String message) {
         this.author = author;

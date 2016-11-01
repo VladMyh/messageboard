@@ -4,6 +4,7 @@ import com.messageboard.message.Message;
 import com.messageboard.message.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,13 +21,13 @@ public class MessageController {
         this.service = service;
     }
 
-    @RequestMapping(path = "/messages", method = RequestMethod.GET)
+    @RequestMapping(value = "/messages", method = RequestMethod.GET)
     public ResponseEntity<List<Message>> getAllMessages() {
         return ResponseEntity.ok(service.getMessages());
     }
 
-    @RequestMapping(path = "/messages", method = RequestMethod.POST)
-    public void addMessage() {
-
+    @RequestMapping(value = "/messages", method = RequestMethod.POST)
+    public void addMessage(@RequestBody Message message) {
+        service.addMessage(message);
     }
 }
