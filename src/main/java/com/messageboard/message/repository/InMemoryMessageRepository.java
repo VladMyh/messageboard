@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class InMemoryMessageRepository implements MessageReopsitory{
+public class InMemoryMessageRepository implements MessageRepository {
 
-    private static ArrayList<Message> messages;
+    private static ArrayList<Message> messages = new ArrayList<>();
 
     @Override
     public List<Message> getMessages() {

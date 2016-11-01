@@ -27,6 +27,9 @@ public class Message {
 
     @Override
     public String toString() {
-        return author + ":" + message;
+        return "Message{" +
+            "author='" + author + '\'' +
+            ", message='" + message + '\'' +
+            '}';
     }
 }
