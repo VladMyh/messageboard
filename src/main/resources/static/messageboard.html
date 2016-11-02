@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Messageboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="load.js"></script>
 
     <style type="text/css">
         body {
@@ -44,63 +45,46 @@
 </head>
 <body>
 <div class="container">
-    <form name="form" class="message-form" method="post" action="http://localhost:8080/messages">
+    <form id="form" name="form" class="message-form" method="post" action="http://localhost:8080/messages">
         <h2 class="form-signin-heading">Messageboard</h2>
-        <input name="author" type="text" class="input-block-level" placeholder="Name">
-        <input name="message" type="text" class="input-block-level" placeholder="Message">
+        <input id="author" name="author" type="text" class="input-block-level" placeholder="Name">
+        <input id="message" name="message" type="text" class="input-block-level" placeholder="Message">
         <button class="btn btn-large btn-primary" type="submit">Post</button>
+
+        <div class="content">
+            <p>Messages:</p>
+        </div>
     </form>
-
-    <div>
-
-    </div>
 
 </div> <!-- /container -->
 
 <script type='text/javascript'>
     $("#form").submit(function(event) {
-      event.preventDefault();
-
-      var $form = $( this ),
-      url = $form.attr( 'action' );
-      var data = { author: $('#author').val(), message: $('#message').val() };
+        event.preventDefault();
+        var $form = $( this );
+        url = $form.attr( 'action' );
+        var data = { author: $('#author').val(), message: $('#message').val() };
 
         $.ajax({
-                url: url,
-                dataType: 'json',
-                type: 'post',
-                contentType: 'application/json',
-                data: { author: $('#author').val(), message: $('#message').val() },
-                processData: false,
-                success: function( data, textStatus, jQxhr ){
-                    $('#response pre').html( JSON.stringify( data ) );
-                },
-                error: function( jqXhr, textStatus, errorThrown ){
-                    console.log( errorThrown );
-                }
-            });
-
-            $.postJSON = function(url, data, callback) {
-                return jQuery.ajax({
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                'type': 'POST',
-                'url': 'http://localhost:8080/messages',
-                'data': '{author: 'test', message: 'test'}',
-                'dataType': 'json',
-                'success': callback
-                });
-            };
-
-      posting.done(function( data ) {
-        alert('success');
-      });
+            type: 'POST',
+            headers: {
+                "content-type": "application/json; charset=utf-8",
+                "Access-Control-Allow-Origin": "*"
+            },
+            url: "http://localhost:8080/messages",
+            dataType: "json",
+            //data: {"author":"test", "message":"test"},
+            data: data,
+            success: function(data, textStatus, jqXHR){
+                alert('created successfully');
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                alert('error: ' + textStatus);
+            }
+        });
     });
 </script>
 
-<script src="http://code.jquery.com/jquery.js"></script>
 <script src="js/bootstrap.min.js"></script>
 </body>
 </html>
