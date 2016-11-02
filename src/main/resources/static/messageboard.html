@@ -20,7 +20,7 @@
         }
 
         .message-form {
-            max-width: 400px;
+            max-width: 600px;
             padding: 19px 29px 29px;
             margin: 0 auto 20px;
             background-color: #fff;
@@ -51,10 +51,13 @@
     <form id="form" name="form" class="message-form" method="post" action="http://localhost:8080/messages">
         <h2 class="form-signin-heading">Messageboard</h2>
         <input id="author" name="author" type="text" class="input-block-level" placeholder="Name">
-        <input id="message" name="message" type="text" class="input-block-level" placeholder="Message">
+        <div class="form-group">
+            <label for="comment">Message:</label>
+            <textarea id="message" name="message" class="form-control" rows="2" id="comment"></textarea>
+        </div>
         <button class="btn btn-large btn-primary" type="submit">Post</button>
 
-        <p>Messages:</p>
+        <h3>Messages</h3>
         <div id="messages" class="content">
 
 
@@ -76,7 +79,10 @@
             dataType: "json",
             method: "POST",
             headers: {"content-type": "application/json; charset=utf-8",
-                    "Access-Control-Allow-Origin": "*"}
+                    "Access-Control-Allow-Origin": "*"},
+            complete: function(html) {
+                document.getElementById("message").value = "";
+            }
         });
     });
 </script>
