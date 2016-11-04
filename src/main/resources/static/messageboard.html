@@ -50,9 +50,6 @@
 <body>
 <div class="container">
     <form id="form" name="form" class="message-form" method="post" action="http://localhost:8080/messages">
-
-        <div id="result" class='notifications top-left'>test</div>
-
         <h2 class="form-signin-heading">Messageboard</h2>
         <input id="author" name="author" type="text" class="input-block-level" placeholder="Name" required>
         <div class="form-group">
@@ -71,50 +68,20 @@
 </div> <!-- /container -->
 
 <script type='text/javascript'>
-    var eventSource = new EventSource("http:localhost:8080/sse/updates");
 
-    eventSource.onmessage = function(event) {
+    if (!!window.EventSource) {
+        var eventSource = new EventSource("http:localhost:8080/sse/updates");
+        eventSource.onmessage = function (event) {
 
-        $.notify({
-            message: 'Hello World'
-        },{
-            type: 'danger'
-        });
-        document.getElementById('result').innerHTML = event.data;
-
-    };
-
-    /*if (!!window.EventSource) {
-        console.log("Event source available");
-        var source = new EventSource('http:localhost:8080/notification');
-
-        source.addEventListener('message', function(e) {
-            console.log(JSON.stringify(e.data));
-
-            alert(e.data);
-
-            document.getElementById("result").innerText = "recieved";
-        });
-
-        source.addEventListener('open', function(e) {
-            console.log("Connection was opened.");
-        }, false);
-
-        source.addEventListener('error', function(e) {
-            if (e.readyState == EventSource.CLOSED) {
-                console.log("Connection was closed.");
-            } else {
-                console.log(e.readyState);
-            }
-        }, false);
-    } else {
-        console.log("No SSE available");
-    }*/
+                $.bootstrapGrowl(event.data, {
+                    stackup_spacing: 10
+                });
+        };
+    }
 
     $("#form").submit(function(event) {
+        $('#author').attr('readonly', true);
         var x = document.forms["form"]["message"].value;
-
-
 
         event.preventDefault();
         var $form = $( this );

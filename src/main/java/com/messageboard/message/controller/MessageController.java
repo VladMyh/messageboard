@@ -10,16 +10,17 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 public class MessageController {
 
     private final MessageService service;
-    private List<SseEmitter> sseEmitters = Collections.synchronizedList(new ArrayList<>());
+    private Set<String> users = new HashSet<>();
+    private List<String> newUsers = new LinkedList<>();
 
     @Autowired
     public MessageController(MessageService service) {
@@ -36,21 +37,25 @@ public class MessageController {
     @RequestMapping(value = "/messages", method = RequestMethod.POST)
     public void addMessage(@RequestBody Message message) {
         service.addMessage(message);
+
+        users.add(message.getAuthor());
+        if(!newUsers.contains(message.getAuthor()))
+            newUsers.add(message.getAuthor());
     }
 
     @CrossOrigin
     @RequestMapping("/sse/updates")
     public SseEmitter subscribeUpdates() {
         SseEmitter sseEmitter = new SseEmitter();
-        synchronized (this.sseEmitters) {
-            this.sseEmitters.add(sseEmitter);
-            Random r = new Random();
+        if(newUsers.size() > 0) {
             try {
-                sseEmitter.send("{responce:'Notification " + r.nextInt() + "'}", MediaType.APPLICATION_JSON);
+                sseEmitter.send("User " + newUsers.get(0) + " is online");
+                newUsers.remove(0);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        sseEmitter.complete();
         return sseEmitter;
     }
 }
