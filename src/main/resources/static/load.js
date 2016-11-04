@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
     function appendMessage(elem, toAppend) {
-        elem.append("<div class=\"panel panel-default\"> <div class=\"panel-body\"><b>" +
+        elem.prepend("<div class=\"panel panel-default\"> <div class=\"panel-body\"><b>" +
                             toAppend.author + "</b> : " + toAppend.message + "</div></div>");
     }
 

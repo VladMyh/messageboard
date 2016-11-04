@@ -11,6 +11,7 @@
           crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="load.js"></script>
+    <script src="jquery.bootstrap-growl.js"></script>
 
     <style type="text/css">
         body {
@@ -49,11 +50,14 @@
 <body>
 <div class="container">
     <form id="form" name="form" class="message-form" method="post" action="http://localhost:8080/messages">
+
+        <div id="result" class='notifications top-left'>test</div>
+
         <h2 class="form-signin-heading">Messageboard</h2>
-        <input id="author" name="author" type="text" class="input-block-level" placeholder="Name">
+        <input id="author" name="author" type="text" class="input-block-level" placeholder="Name" required>
         <div class="form-group">
             <label for="comment">Message:</label>
-            <textarea id="message" name="message" class="form-control" rows="2" id="comment"></textarea>
+            <textarea id="message" name="message" class="form-control" rows="2" id="comment" required></textarea>
         </div>
         <button class="btn btn-large btn-primary" type="submit">Post</button>
 
@@ -67,7 +71,51 @@
 </div> <!-- /container -->
 
 <script type='text/javascript'>
+    var eventSource = new EventSource("http:localhost:8080/sse/updates");
+
+    eventSource.onmessage = function(event) {
+
+        $.notify({
+            message: 'Hello World'
+        },{
+            type: 'danger'
+        });
+        document.getElementById('result').innerHTML = event.data;
+
+    };
+
+    /*if (!!window.EventSource) {
+        console.log("Event source available");
+        var source = new EventSource('http:localhost:8080/notification');
+
+        source.addEventListener('message', function(e) {
+            console.log(JSON.stringify(e.data));
+
+            alert(e.data);
+
+            document.getElementById("result").innerText = "recieved";
+        });
+
+        source.addEventListener('open', function(e) {
+            console.log("Connection was opened.");
+        }, false);
+
+        source.addEventListener('error', function(e) {
+            if (e.readyState == EventSource.CLOSED) {
+                console.log("Connection was closed.");
+            } else {
+                console.log(e.readyState);
+            }
+        }, false);
+    } else {
+        console.log("No SSE available");
+    }*/
+
     $("#form").submit(function(event) {
+        var x = document.forms["form"]["message"].value;
+
+
+
         event.preventDefault();
         var $form = $( this );
         var url = $form.attr( 'action' );
